@@ -13,7 +13,7 @@ I hope building this repository to be a **giant leap of progression in my career
 
 
 ## About Me
-I am second year student majoring in COmputer Science
+I am second year student majoring in Computer Science
 
 **These are my favorite things**
 
