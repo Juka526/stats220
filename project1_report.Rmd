@@ -56,7 +56,9 @@ pre {
 
 ## Project requirements
 <!-- Briefly summarise how you have met the requirements related to working with GitHub (and optionally GitHub pages). Include the links to your repo and to your website (these are different links).-->
-[Here is the link to my Stats220 repo]("https://github.com/Juka526/stats220")
+[Here is the link to my Stats220 repo](https://github.com/Juka526/stats220)
+
+[Here is the link to my GitHub website](https://juka526.github.io/stats220/)
 
 I created Stats220 repo on my GitHub account.
 The GitHub repo has a README.md file so that the viewer can clarify the purpose of this repo and its contents. It also contains some information about myself like my favorite football team, musician and what I am majoring in. Additionally, this file meets all the required Markdown syntax with two different levels of headers, use of two different types of bullet points (ordered and unordered), use of bold and italics, and use of links to other websites.
@@ -209,10 +211,6 @@ I showcased creativity within this project by crafting my meme. Initially, I emp
 ## Learning reflection
 
 I learned many techniques and how to combine them. Before taking module 1, I did not know other ways like RMD to create HTML, CSS, PPTX, and docx files. Moreover, using rmd is efficient and tidy for combining different techs. CSS, HTML, and R code are written and work together in this one file. Creating memes and animations was interesting because I had not created anything like that before, and thanks to this project, I could quickly learn by utilizing the magick library. I am curious to learn and produce different files, such as PPTX, docx, and R code, to try different libraries.
-
-
-
-
 
 
 
