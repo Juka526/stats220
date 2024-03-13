@@ -3,7 +3,7 @@ This repository is for my projects and any work from stats220.
 
 *This is my first work in github and R coding as well.* 
 
-* Achievements that I want from building this repository *
+*Achievements that I want from building this repository*
   1. Ubderstand how to creating something and communicate with collected data.
   2. Get familier with GitHub nad its features.
      
