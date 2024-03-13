@@ -12,6 +12,12 @@ I hope building this repository to be a **giant leap of progression in my career
 
 
 
-## My favorite football team
-![Arsenal emblem](https://upload.wikimedia.org/wikipedia/en/thumb/5/53/Arsenal_FC.svg/1200px-Arsenal_FC.svg.png)
-- [Click link to know more about Arsenal](https://www.arsenal.com/)!
+## About Me
+I am second year student majoring in COmputer Science
+
+**These are my favorite things**
+
+- My favorite football team is arsenal
+  ![Arsenal emblem](https://upload.wikimedia.org/wikipedia/en/thumb/5/53/Arsenal_FC.svg/1200px-Arsenal_FC.svg.png)
+  [Click link to know more about Arsenal](https://www.arsenal.com/)!
+- My favorite musician is [IU](https://www.instagram.com/dlwlrma/?hl=en)!
