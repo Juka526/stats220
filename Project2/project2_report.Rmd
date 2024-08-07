@@ -1,0 +1,283 @@
+---
+title: "Project2"
+subtitle: "STATS 220 Semester One 2024"
+author: "Juahn Kim"
+date: "2024-03-27"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{css echo=FALSE}
+body {
+
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 20px;
+}
+
+h1 {
+  color: #B2675E;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+h2 {
+  color: #2C4C60;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+h3 {
+  color: #B2675E;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+h4 {
+  color: ##darkgreen;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+h5 {
+  color: ##2C4C60;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+p {
+  font-size: 16px;
+}
+
+code {
+  font-family: Consolas, monospace;
+  font-size: 14px;
+
+}
+
+pre {
+  padding: 10px;
+}
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, message=FALSE, warning=FALSE, error=FALSE)
+library(tidyverse)
+library(tidytext)       # provides additional text mining functions
+```
+
+## Introduction
+
+### Project Topic
+
+#### How and when people take rest?
+
+This project is tracking how and when people take rests. It also contains how people feedback their rest themselves.
+
+### How is this project's goolge form Following Guidelines
+
+
+##### 1. Communicating its purpose
+
+   The title, "How was your rest like?" briefly introduces the topic of this survey. Moreover, it describes the purpose of the data usage and how the survey will be conducted, and the survey is anonymous at the top of the form.
+
+##### 2. Only ask for the data you need
+
+   I wanted to track what people do while resting, how long and when they do it, and how they feel about their rest. I asked about the rest time activities, the hours spent on them, and the feedback.
+
+##### 3. Consider respondents
+
+   The language used in this form appears respectful and non-discriminatory. It asks respondents to provide information about their rest activities and perceptions without making assumptions or using potentially offensive language.
+
+##### 4. Use validation rules for responses
+
+   I used the validation rule to limit the range of numeric data to prevent getting data with outliers and made all the questions required to avoid being left blank.
+
+### How does the data collected from form analyse change over different weeks by referring to a specific question?
+
+   To track changes in respondents' behaviours toward rest, I divided the form into two sections with identical questions to get the information for two weeks. Furthermore, each question is asked weekly by requiring answers for a specific week, like "What did you usually do in your rest time in the Third week?""
+
+### Links
+
+[Google form](https://forms.gle/jqPef7T53HJwFhZRA), [CSV sheet link](https://docs.google.com/spreadsheets/d/e/2PACX-1vTq_JQND-AjtOoTETwiWWdiC0x3KL9QQoRXmxhYV03PqzpaUtX5H99suyJoYP9Vg26qBsLGz7gnMUQP/pub?output=csv), [Google sheet](https://docs.google.com/spreadsheets/d/1UkGbjBNTfqXjJx5MVuQCWIyiJDjfib7yD86ZwexyOW8/edit?usp=sharing)
+
+
+
+## Analytics
+
+
+#### reading and renaming data frame
+```{r}
+learning_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTq_JQND-AjtOoTETwiWWdiC0x3KL9QQoRXmxhYV03PqzpaUtX5H99suyJoYP9Vg26qBsLGz7gnMUQP/pub?output=csv")
+renamed_learning_data <- learning_data %>%
+  rename(rest_activity = 2,
+         mean_rest = 3,
+         rest_period = 4,
+         change_to_rest = 5,
+         rest_rate =6,
+         #prefix "next_" means that these data are from section 2 of the form
+         next_rest_activity = 7,
+         next_mean_rest = 8,
+         next_rest_period = 9,
+         next_change_to_rest = 10,
+         next_rest_rate = 11)
+```
+
+#### Categorization (creativity-1) 
+To gather a diverse set of rest activities, respondents were allowed to provide their activities in short answers instead of selecting from predetermined categories. Then, I had to analyze text data to understand what are those.
+
+For this purpose, I established two table variables to store words extracted from the text data. While the module did not cover unnest_token(), I decided on its use instead of sep() to avoid the necessity of prior text conversion to lowercase. This alternative approach allowed for a more efficient process while achieving the same objective. So I needed the library(tidytext).
+```{r}
+#how to get word frequency from text: https://afit-r.github.io/tidy_text and https://www.codementor.io/@alexander-k/r-word-frequency-in-dataframe-165jgfxxqe
+text_tb <- tibble(text = renamed_learning_data$rest_activity)
+next_text_tb <- tibble(text = renamed_learning_data$next_rest_activity)
+#week3 dataframe
+word_tb <- text_tb %>%
+  unnest_tokens(word, text)
+#week4 dataframe
+next_word_tb <- next_text_tb %>%
+  unnest_tokens(word, text)
+
+
+```
+After getting tables containing words from the "rest_activity" and "next_rest_activity" columns, I categorized all the activities into nine groups. To achieve this, I employed the mutate(category = case_when(...)) function. This process involved identifying keywords within each word row and assigning them to their respective categories, ensuring that each activity was correctly allocated to the appropriate category.
+This is the [resource](https://stackoverflow.com/questions/43696227/mutate-with-case-when-and-contains) that I used to write this code.
+```{r}
+#how to categorize elements in table: https://stackoverflow.com/questions/43696227/mutate-with-case-when-and-contains
+# how to make a function: https://www.dataquest.io/blog/write-functions-in-r/
+# I wanted to make a categorizing function to avoid duplicating categorizing code but I kept failing so I couldn't avoid duplicating.
+word_tb <- word_tb %>%
+    mutate(category = case_when(
+      #how to check if value is in Dataframe: https://sparkbyexamples.com/r-programming/usage-of-in-operator-in-r/
+      word %in% c('watching', 'watch') ~ 'watching_video',
+      word %in% c('game', 'games', 'lol', 'fifa', 'boardgame', 'sudoku') ~ 'playing_game',
+      word %in% c('friend', 'friends', 'gf', 'girlfriend', 'family', 'bf', 'boyfriend') ~ 'spend_time_with_friend_or_family',
+      word %in% c('read', 'reading', 'write', 'writing') ~ 'reading_and_writing',
+      word %in% c('sport', 'sports', 'exercise', 'workout', 'gym', 'football', 'basketball', 'ball', 'walk', 'walking', 'park', 'travel', 'run', 'running', 'parc', 'baseball', 'soccer', 'golf', 'volleyball', 'swimming', 'jog', 'jogging') ~ "going_outside_or_exercise",
+      word %in% c('sns', 'internet', 'instagram', 'facebook', 'online', 'phone') ~ 'internet_browsing_and_sns',
+      word %in% c('studying', 'learn', 'studied') ~ 'studying',
+      word %in% c('sleeping', 'bed', 'nap', 'sleep', 'slept') ~ 'sleeping',
+      word %in% c('listening', 'listen', 'piano', 'guitar', 'singing') ~ 'listening_music_or_playing_instrument',
+      TRUE ~ NA_character_
+    ))
+
+next_word_tb <- next_word_tb %>%
+  mutate(category = case_when(
+    #how to check if value is in Dataframe: https://sparkbyexamples.com/r-programming/usage-of-in-operator-in-r/
+    word %in% c('watching', 'watch') ~ 'watching_video',
+    word %in% c('game', 'games', 'lol', 'fifa', 'boardgame', 'sudoku') ~ 'playing_game',
+    word %in% c('friend', 'friends', 'gf', 'girlfriend', 'family', 'bf', 'boyfriend') ~ 'spend_time_with_friend_or_family',
+    word %in% c('read', 'reading', 'write', 'writing') ~ 'reading_and_writing',
+    word %in% c('sport', 'sports', 'exercise', 'workout', 'gym', 'football', 'basketball', 'ball', 'walk', 'walking', 'park', 'travel', 'run', 'running', 'parc', 'baseball', 'soccer', 'golf', 'volleyball', 'swimming', 'jog', 'jogging') ~ "going_outside_or_exercise",
+    word %in% c('sns', 'internet', 'instagram', 'facebook', 'online', 'phone') ~ 'internet_browsing_and_sns',
+    word %in% c('studying', 'learn', 'studied') ~ 'studying',
+    word %in% c('sleeping', 'bed', 'nap', 'sleep', 'slept') ~ 'sleeping',
+    word %in% c('listening', 'listen', 'piano', 'guitar', 'singing') ~ 'listening_music_or_playing_instrument',
+    TRUE ~ NA_character_
+  ))
+```
+
+#### Bar chart for Top 5 Most Common Categories in 3rd and 4th week of March
+
+```{r, echo=FALSE}
+#3rd week activity plot 
+count_category_tb <- word_tb %>%
+  count(category, sort = TRUE)
+activity_plot <- count_category_tb %>%
+  filter(category != "N/A") %>%
+  #get the first top five categories
+  head(5) %>%
+  #reference of reorder function: https://stackoverflow.com/questions/37480949/re-ordering-bars-in-rs-barplot
+  ggplot(aes(y = reorder(category, n), x = n, fill = category)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Count", y = "Category", title = "Top 5 Most Common Categories in 3rd week of March") +
+  theme_minimal()
+
+next_count_category_tb <- next_word_tb %>%
+  count(category, sort = TRUE)
+next_activity_plot <- next_count_category_tb %>%
+  filter(category != "N/A") %>%
+  #get the first top five categories
+  head(5) %>%
+  #reference of reorder function: https://stackoverflow.com/questions/37480949/re-ordering-bars-in-rs-barplot
+  ggplot(aes(y = reorder(category, n), x = n, fill = category)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Count",y='Category', title = "Top 5 Most Common Categories in 4th week of March") +
+  theme_minimal()
+
+
+
+# Combine plots side by side using cowplot
+#removing legend: https://www.datanovia.com/en/blog/how-to-remove-legend-from-a-ggplot/
+activity_plot
+next_activity_plot
+
+
+```
+
+Both of week3 and week4 had a same top one and two category which are "wathcing_video" and "going_out_or_exercise".
+"playing_game" shows a biggest different ranking between two week's top5 categories. 
+
+
+#### How did people rate their rest?
+```{r}
+mean_rate <- round(mean(renamed_learning_data$rest_rate),2)
+next_mean_rate <- round(mean(renamed_learning_data$next_rest_rate),2)
+paste("The mean value of respondents' rest_rate in week3 was", mean_rate, "and for week4 it was", next_mean_rate)
+```
+
+#### How did people want to change their length of rest time?
+```{r}
+mean_change <- round(mean(renamed_learning_data$change_to_rest),2)
+next_mean_change <- round(mean(renamed_learning_data$next_change_to_rest),2)
+
+paste("The mean value of respondents' change_to_rest in week3 was", mean_rate, "and for week4 it was", next_mean_rate)
+```
+
+#### How many people didn't want to change their rest time?
+```{r}
+no_change <- renamed_learning_data %>%
+  filter(change_to_rest == 0) %>%
+  count()
+next_no_change <- renamed_learning_data %>%
+  filter(next_change_to_rest == 0) %>%
+  count()
+paste("The number of people who had a right rest time in week3 is", no_change, 'and for week4 was', next_no_change)
+```
+
+
+#### Bar chart for common rest time in week3 and week4
+```{r}
+#Bar chart 2: common rest period
+separated_rest_period <- renamed_learning_data[4] %>%
+  separate_rows(rest_period, sep= ", ") %>%
+  count(rest_period, sort = TRUE)
+
+next_separated_rest_period <- renamed_learning_data[9] %>%
+  separate_rows(next_rest_period, sep= ", ") %>%
+  count(next_rest_period, sort = TRUE)
+#week3 period plot
+period_plot <- separated_rest_period %>%
+  ggplot(aes( y = reorder(rest_period, n), x = n, fill = rest_period))+
+  geom_bar(stat = "identity") +
+  labs(x = "Count", y = "Rest_period", title = "Common Rest Period in 3rd week") +
+  theme_minimal()
+#week4 period plot
+next_period_plot <- next_separated_rest_period %>%
+  ggplot(aes( y = reorder(next_rest_period, n), x = n, fill = next_rest_period))+
+  geom_bar(stat = "identity") +
+  labs(x = "Count", y = "Rest_period", title = "Common Rest Period in 4th week") +
+  theme_minimal()
+
+period_plot
+next_period_plot
+```
+These two bar charts represent that the majority of people had their rest time "after_work_or/and_uni" and "weekend". 
+
+
+### Creativity-2
+To make a graph look better, I used reorder() for every bar chart. And here is where I learned how to use [reorder function](https://stackoverflow.com/questions/37480949/re-ordering-bars-in-rs-barplot). Moreover, I used filter() to count a number of value that has a specific value. I used this to count how many people thought they need no change in their rest time. Here is where I learned about [filter function](https://stackoverflow.com/questions/26573285/using-filter-with-count)
+
+### Learning reflection
+I felt like I created something from zero. I collected data from the Google form that I made, and I also used data from the form to analyze people's behaviour. Seeing how my report changes when someone submits the form was interesting. I've put a lot of effort into categorizing rest_activity carefully without counting less or more than it should be by finding keywords from each response. It may be an inefficient way of doing this. Nevertheless, I learned a lot from there at the same time. But I still believe I could understand and find a better way to do this kind of work in this course later.  
