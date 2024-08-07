@@ -1,0 +1,93 @@
+---
+title: "project4"
+subtitle: "Visualising data about videos from the YouTube channels @premierleague and @bundesliga"
+author: "Juahn Kim"
+date: "2024-05-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, message=FALSE, warning=FALSE, error=FALSE)
+```
+
+```{css echo=FALSE}
+body {
+
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 20px;
+}
+
+h1 {
+  color: #F189C9;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+h2 {
+  color: #F189C9;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+h3 {
+  color: #FFBEBA;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+h4 {
+  color: #00C4FF;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+h5 {
+  color: #00C4FF;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+p {
+  font-size: 16px;
+}
+
+code {
+  font-family: Consolas, monospace;
+  font-size: 14px;
+
+}
+
+pre {
+  padding: 10px;
+}
+```
+
+## Introduction
+
+#### Selected YouTube Channels
+I selected two different football league's YouTube channels @bundesliga and @premierleague. I chose these channels because I am a big football fan and wanted to observe how these two channels are different. My main interest was comparing the duration of the two channels' highlights videos because the premier league's highlights videos are too short to get what happens during the matches.
+
+#### Two ideas that I had BEFORE I accessed the data
+Before I accessed the data, I planned to get the main categories of the video that they created. I assumed there must be highlights, selected players' analysis, player interviews, etc. Most assumed categories were in the data, but I couldn't get the interview category.
+
+#### Process of creating data visualisations 
+I mainly focused on the title to get different categories of the videos from these two channels, and all plots were created using a category extracted from the title. As my main interest was to compare the length of highlights videos, I had to categorise videos, and I believed it would help compare the two channels. I used geom_col() to easily observe the primary type of videos and fill colours by channel to compare the ratio of the creator of each video type.
+
+
+## Dynamic data story
+
+![](data_story.gif){width="100%"}
+
+## Learning reflection
+The most significant improvement from module 4 is that I could use more plots, which helped me use the most appropriate plot type that can represent the data effectively. Another important idea that I learnt is to use less repetitive code. This can simplify the code and increase the efficiency. Furthermore, after completing Project 2, I desired to learn more about categorizing skills, and intriguingly, I learned case_when(), which does data manipulation. However, I couldn't apply that idea to my Project 4 well. Hence, I want to learn more about reducing the redundancy of codes and practice this skill.
+
+
+## Appendix
+```{r file='visualisations.R', eval=FALSE, echo=TRUE}
+
+```
+```{r file='data_story.R', eval=FALSE, echo=TRUE}
+
+```
+
